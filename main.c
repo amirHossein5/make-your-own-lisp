@@ -21,9 +21,9 @@ char* readline(char* prompt) {
 void add_history(char* input);
 
 #else
-
 #include <editline/readline.h>
 #include <editline/history.h>
+#endif
 
 int main() {
     mpc_parser_t* Number = mpc_new("number");
@@ -64,4 +64,3 @@ lispy: /^/ <operator> <expr>+ /$/ ; \
 
     return 0;
 }
-#endif
