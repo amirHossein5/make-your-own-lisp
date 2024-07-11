@@ -46,6 +46,11 @@ long eval(mpc_ast_t* t) {
     char* operator = t->children[1]->contents;
     long result = eval(t->children[2]);
 
+    if (! strstr(t->children[3]->tag, "expr")) {
+        if (strcmp(operator, "-") == 0) { return -result; }
+        if (strcmp(operator, "+") == 0) { return result; }
+    }
+
     for (int i = 3; strstr(t->children[i]->tag, "expr"); i++) {
         result = eval_operation(operator, result, eval(t->children[i]));
     }
