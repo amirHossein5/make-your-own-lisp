@@ -32,6 +32,8 @@ long eval_operation(char* operator, long n1, long n2) {
     if (strcmp(operator, "/") == 0) { return n1 / n2; }
     if (strcmp(operator, "^") == 0) { return pow(n1, n2); }
     if (strcmp(operator, "%") == 0) { return n1 % n2; }
+    if (strcmp(operator, "min") == 0) { return n1 < n2 ? n1 : n2; }
+    if (strcmp(operator, "max") == 0) { return n1 > n2 ? n1 : n2; }
 
     return 0;
 }
@@ -60,7 +62,7 @@ int main() {
     mpca_lang(MPCA_LANG_DEFAULT,
               " \
 number  : /-?[0-9]+/ ; \
-operator: '+' | '-' | '*' | '/' | '^' | '%' ; \
+operator: '+' | '-' | '*' | '/' | '^' | '%' | \"min\" | \"max\" ; \
 expr: <number> | '(' <operator> <expr>+ ')' ; \
 lispy: /^/ <operator> <expr>+ /$/ ; \
 ",
