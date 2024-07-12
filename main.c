@@ -27,14 +27,14 @@ void add_history(char* input);
 
 typedef struct lval {
     int type;
-    long num;
+    double num;
     int err;
 } lval;
 
 enum { LVAL_NUM, LVAL_ERR };
 enum { LERR_DIVIDED_BY_ZERO, LERR_BAD_OP, LERR_BAD_NUM };
 
-lval lval_num(long x) {
+lval lval_num(double x) {
     lval v;
     v.type = LVAL_NUM;
     v.num = x;
@@ -58,7 +58,11 @@ void lval_print(lval v) {
             printf("%s", "Err: invalid number.");
         }
     } else if(v.type == LVAL_NUM) {
-        printf("%ld", v.num);
+        if (ceil(v.num) == (long) v.num) {
+            printf("%ld", (long) v.num);
+        } else {
+            printf("%f", v.num);
+        }
     }
 }
 
@@ -75,7 +79,7 @@ lval eval_operation(char* operator, lval n1, lval n2) {
     if (strcmp(operator, "+") == 0) { return lval_num(n1.num + n2.num); }
     if (strcmp(operator, "*") == 0) { return lval_num(n1.num * n2.num); }
     if (strcmp(operator, "^") == 0) { return lval_num(pow(n1.num, n2.num)); }
-    if (strcmp(operator, "%") == 0) { return lval_num(n1.num % n2.num); }
+    if (strcmp(operator, "%") == 0) { return lval_num(fmod(n1.num, n2.num)); }
     if (strcmp(operator, "min") == 0) { return lval_num(n1.num < n2.num ? n1.num : n2.num); }
     if (strcmp(operator, "max") == 0) { return lval_num(n1.num > n2.num ? n1.num : n2.num); }
     if (strcmp(operator, "/") == 0) {
@@ -91,7 +95,7 @@ lval eval_operation(char* operator, lval n1, lval n2) {
 lval eval(mpc_ast_t* t) {
     if (strstr(t->tag, "number")) {
         errno = 0;
-        long x = strtol(t->contents, NULL, 10);
+        double x = strtod(t->contents, NULL);
         return errno == ERANGE ? lval_err(LERR_BAD_NUM) : lval_num(x);
     }
 
@@ -117,7 +121,7 @@ int main() {
 
     mpca_lang(MPCA_LANG_DEFAULT,
               " \
-number  : /-?[0-9]+/ ; \
+number  : /-?[0-9.]+/ ; \
 operator: '+' | '-' | '*' | '/' | '^' | '%' | \"min\" | \"max\" ; \
 expr: <number> | '(' <operator> <expr>+ ')' ; \
 lispy: /^/ <operator> <expr>+ /$/ ; \
