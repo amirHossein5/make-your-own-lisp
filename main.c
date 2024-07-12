@@ -119,14 +119,12 @@ int main() {
     mpc_parser_t* Expr = mpc_new("expr");
     mpc_parser_t* Lispy = mpc_new("lispy");
 
-    mpca_lang(MPCA_LANG_DEFAULT,
-              " \
-number  : /-?[0-9.]+/ ; \
-operator: '+' | '-' | '*' | '/' | '^' | '%' | \"min\" | \"max\" ; \
-expr: <number> | '(' <operator> <expr>+ ')' ; \
-lispy: /^/ <operator> <expr>+ /$/ ; \
-",
-              Number, Operator, Expr, Lispy);
+    mpca_lang(MPCA_LANG_DEFAULT, " \
+        number  : /-?[0-9.]+/ ; \
+        operator: '+' | '-' | '*' | '/' | '^' | '%' | \"min\" | \"max\" ; \
+        expr: <number> | '(' <operator> <expr>+ ')' ; \
+        lispy: /^/ <operator> <expr>+ /$/ ; \
+    ", Number, Operator, Expr, Lispy);
 
     puts("Lispy version 0.0.1");
     puts("Press Ctrl+c to exit\n");
