@@ -11,7 +11,7 @@ Lisp> + 1 (-20) 9
 -10
 Lisp> min 3 1 2
 1
-Lisp> max 3 1 2
+Lisp> max 3 1 2 2
 3
 ```
 
